@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
     for (int i = 0; i < numArchivos; ++i)
     {
         string nombreArchivo = "archivo_" + to_string(i + 80) + ".bin";
-        size_t tamañoEnBytes = rand() % 100000 + 1; // Tamaño aleatorio entre 1 y 320,000,000 bytes
+        size_t tamañoEnBytes = rand() % 320000000 + 1; // Tamaño aleatorio entre 1 y 320,000,000 bytes
         generarArchivoAleatorio(nombreArchivo, tamañoEnBytes);
 
         double tiempoCompresionZip = 0.0, tiempoCompresionGzip = 0.0;
