@@ -1,7 +1,5 @@
 # Importar los datos
-datos <- read.table("resultados.txt", header = TRUE, sep = "\t")
-datos$TiempoCompresionGzip <- datos$TiempoCompresionGzip*1000
-datos$TiempoCompresionZip <- datos$TiempoCompresionZip*1000
+datos <- read.table("clipboard", header = TRUE, sep = "\t")
 #  Pasar tamaño a Kb
 datos$Tamaño <- datos$Tamaño / (1024)
 
@@ -80,7 +78,6 @@ plot(means_descomp, diferencia_descompresion,
      pch = 19, col = "black")
 
 #Qqplots
-windows()
 qqnorm(diferencia_compresion, main = "QQ-plot de la Diferència de Compressió")
 qqline(diferencia_compresion, col = "red")
 
@@ -89,6 +86,11 @@ qqline(diferencia_descompresion, col = "red")
 
 
 #IC:
+#Hem de destransformar el interval de confiança
+mean(diferencia_compresion)
+
+#Tcompgzip = tcompzip + mean(diferencia_compresion) en mitjana
+
 summary(lm(diferencia_compresion ~ 1))
 0.09272+qt(0.975,79)*0.02073
 0.09272-qt(0.975,79)*0.02073
@@ -97,12 +99,23 @@ t.test(datos$TiempoCompresionGzip,datos$TiempoCompresionZip,paired = T)
 summary(lm(diferencia_descompresion~1))
 0.06221+qt(0.975,79)*0.04404
 0.06221-qt(0.975,79)*0.04404
-#Para probar las 2 
+#Para probar las 2 formas de calcularlo
 t.test(datos$TiempoDescompresionGzip,datos$TiempoDescompresionZip,paired = T)
-
 attach(datos)
 #lm:
-summary(lm(TiempoCompresionZip ~ Tamaño))
-summary(lm(TiempoCompresionGzip ~ Tamaño))
-summary(lm(TiempoDescompresionZip ~ Tamaño))
-summary(lm(TiempoDescompresionGzip ~ Tamaño))
+# Valores ajustados y residuos
+compresion_zip<-lm(TiempoCompresionZip~Tamaño)
+compresion_gzip<-lm(TiempoCompresionGzip~Tamaño)
+descompresion_zip<-lm(TiempoDescompresionZip~Tamaño)
+descompresion_gzip<-lm(TiempoDescompresionGzip~Tamaño)
+summary(compresion_zip)
+summary(compresion_gzip)
+summary(descompresion_zip)
+summary(descompresion_gzip)
+
+plot(compresion_zip, c(2,1))
+plot(compresion_gzip, c(2,1))
+
+plot(descompresion_zip, c(2,1))
+plot(descompresion_gzip,c(2,1))
+
